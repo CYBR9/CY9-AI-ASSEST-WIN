@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CY9 Floating Orb</title>
+  <link rel="stylesheet" href="styles/widget.css">
+</head>
+<body class="theme-cy9">
+  <div id="orb-container" class="orb-container" title="انقر لفتح CY9 (Click to expand CY9)">
+    <!-- Dynamic Rotating Holographic Canvas -->
+    <canvas id="widget-canvas" width="120" height="120"></canvas>
+    
+    <!-- Central Signature CY9 Logo Emblem -->
+    <div class="cy9-core-disc">
+      <img src="assets/CY9.png" alt="CY9" class="cy9-logo-img" />
+    </div>
+
+    <!-- Status & Glow Rings -->
+    <div class="orb-glow-backdrop"></div>
+    <div class="orb-status-ring"></div>
+    
+    <!-- Quick Overlay Label on Hover -->
+    <div class="orb-hover-badge">
+      <span class="badge-dot"></span>
+      <span class="badge-text">CY9 CORE</span>
+    </div>
+
+    <!-- Quick Mini Action Hint -->
+    <div class="orb-tooltip">انقر للفتح | كليك يمين للخيارات</div>
+  </div>
+
+  <!-- Custom Context Menu for Floating Widget -->
+  <div id="widget-context-menu" class="widget-context-menu hidden">
+    <div class="menu-item" id="ctx-open-hud">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span>فتح CY9 (Open HUD)</span>
+    </div>
+    <div class="menu-item" id="ctx-voice">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      </svg>
+      <span>استماع صوتي فوري</span>
+    </div>
+    <div class="menu-separator"></div>
+    <div class="menu-item" id="ctx-autostart">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+      <span id="ctx-autostart-text">التشغيل مع الويندوز: مفعّل</span>
+    </div>
+    <div class="menu-separator"></div>
+    <div class="menu-item danger" id="ctx-quit">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      <span>إغلاق CY9 كلياً</span>
+    </div>
+  </div>
+
+  <script src="renderer/widgetRenderer.js"></script>
+</body>
+</html>

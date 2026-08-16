@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CY9 // AI Assistant</title>
+  <link rel="stylesheet" href="styles/hud.css">
+</head>
+<body class="theme-cy9">
+  <div id="app-container">
+    <!-- Visual Overlays -->
+    <div class="scanline-overlay"></div>
+    <div class="grid-backdrop"></div>
+
+    <!-- Sci-Fi Titlebar -->
+    <header id="titlebar">
+      <div class="titlebar-brand">
+        <div class="brand-icon"></div>
+        <span class="brand-title">CY9</span>
+        <span class="brand-badge">CORE AI</span>
+      </div>
+
+      <div class="titlebar-status-ticker">
+        <div class="ticker-item">
+          <div class="ticker-dot"></div>
+          <span id="header-swarm-status">SWARM ONLINE (6/6)</span>
+        </div>
+        <div class="ticker-item">
+          <span>TIME: <span id="header-clock">--:--:--</span></span>
+        </div>
+      </div>
+
+      <div class="titlebar-controls">
+        <button id="btn-pin" class="win-btn" title="Toggle Always on Top">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v8m0 0l4 4m-4-4l-4 4m4-4v12"/>
+          </svg>
+        </button>
+        <button id="btn-orb" class="win-btn" title="الوضع المصغر / الدائرة العائمة (Floating Desktop Orb)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+        <button id="btn-mini" class="win-btn" title="Toggle Mini HUD Mode">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2"/>
+            <path d="M4 10h16"/>
+          </svg>
+        </button>
+        <button id="btn-min" class="win-btn" title="Minimize">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+        <button id="btn-max" class="win-btn" title="Maximize">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="5" width="14" height="14" rx="1"/>
+          </svg>
+        </button>
+        <button id="btn-close" class="win-btn close-btn" title="تصغير إلى الدائرة العائمة (Minimize to Floating Orb)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="6" y1="6" x2="18" y2="18"/>
+            <line x1="6" y1="18" x2="18" y2="6"/>
+          </svg>
+        </button>
+        <button id="btn-shutdown" class="win-btn shutdown-btn" title="🛑 إيقاف وتشغيل خروج كامل من CY9 (Shutdown CY9 Completely)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Body & Sidebar -->
+    <div id="main-body">
+      <!-- Tactical HUD Sidebar -->
+      <nav id="hud-sidebar">
+        <button class="nav-item active" data-tab="tab-command" title="Command Center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="3"/>
+            <line x1="12" y1="3" x2="12" y2="7"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="7" y2="12"/>
+            <line x1="17" y1="12" x2="21" y2="12"/>
+          </svg>
+          <span class="nav-label">COMMAND</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-agents" title="Agent Swarm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+          <span class="nav-label">SWARM</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-telemetry" title="System Telemetry">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          <span class="nav-label">SENSORS</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-protocols" title="Protocols & Tools">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          <span class="nav-label">PROTOCOLS</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-terminal" title="PowerShell Terminal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="4 17 10 11 4 5"/>
+            <line x1="12" y1="19" x2="20" y2="19"/>
+          </svg>
+          <span class="nav-label">TERMINAL</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-superpowers" title="15 Ultimate Superpowers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <span class="nav-label">POWERS</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-memory" title="Memory & Agenda">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+          </svg>
+          <span class="nav-label">MEMORY</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-vision" title="Face ID & Camera Vision">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span class="nav-label">VISION</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-ecosystem" title="WhatsApp & Spotify Ecosystem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+          <span class="nav-label">MEDIA</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-smarthome" title="Universal IR Remote & Smart Home Control">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="5" y="2" width="14" height="20" rx="3"/>
+            <circle cx="12" cy="7" r="1.5"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="9" y1="16" x2="15" y2="16"/>
+          </svg>
+          <span class="nav-label">IR REMOTE</span>
+        </button>
+
+        <div class="sidebar-spacer"></div>
+
+        <button class="nav-item" data-tab="tab-settings" title="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span class="nav-label">CONFIG</span>
+        </button>
+      </nav>
+
+      <!-- Content Viewport -->
+      <main id="hud-viewport">
+        <!-- ==================== TAB 1: COMMAND CENTER ==================== -->
+        <section id="tab-command" class="tab-pane active-tab">
+          <div class="command-center-layout">
+            <!-- Left Column: Arc Reactor & Voice Visualizer -->
+            <div class="reactor-column custom-scroll">
+              <div class="reactor-canvas-wrapper">
+                <canvas id="arc-reactor-canvas"></canvas>
+                <div id="reactor-state" class="reactor-state-badge">IDLE // STANDBY</div>
+              </div>
+
+              <!-- Voice Waveform Equalizer -->
+              <div class="voice-wave-container" id="voice-wave-bars">
+                <!-- 16 Dynamic Wave Bars -->
+                <div class="voice-wave-bar" style="height: 4px;"></div>
+                <div class="voice-wave-bar" style="height: 8px;"></div>
+                <div class="voice-wave-bar" style="height: 14px;"></div>
+                <div class="voice-wave-bar" style="height: 20px;"></div>
+                <div class="voice-wave-bar" style="height: 12px;"></div>
+                <div class="voice-wave-bar" style="height: 24px;"></div>
+                <div class="voice-wave-bar" style="height: 18px;"></div>
+                <div class="voice-wave-bar" style="height: 30px;"></div>
+                <div class="voice-wave-bar" style="height: 22px;"></div>
+                <div class="voice-wave-bar" style="height: 16px;"></div>
+                <div class="voice-wave-bar" style="height: 26px;"></div>
+                <div class="voice-wave-bar" style="height: 15px;"></div>
+                <div class="voice-wave-bar" style="height: 20px;"></div>
+                <div class="voice-wave-bar" style="height: 10px;"></div>
+                <div class="voice-wave-bar" style="height: 6px;"></div>
+                <div class="voice-wave-bar" style="height: 4px;"></div>
+              </div>
+
+              <!-- Dedicated Live Call & Screen Share Toolbar (2-Button Layout) -->
+              <div class="voice-controls-grid">
+                <button id="btn-live-duplex-call" class="voice-tool-btn live-call" title="مكالمة صوتية حية ومستمرة مع جيميني">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#00ffcc" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  <span id="live-duplex-text">LIVE CALL</span>
+                </button>
+
+                <button id="btn-live-screen-share" class="voice-tool-btn screen-share" title="مشاركة الشاشة الحية مع جيميني (Gemini Live Vision)">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#00f0ff" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                  <span id="live-screen-share-text">SCREEN SHARE</span>
+                </button>
+              </div>
+
+              <!-- Stop Speech Button (Visible only while speaking) -->
+              <button id="btn-stop-speech" class="stop-speech-btn hidden" title="إيقاف صوت CY9 فوراً (Press ESC or Space to Stop)">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                </svg>
+                <span>🛑 إيقاف الصوت فوراً (STOP - ESC)</span>
+              </button>
+
+              <!-- Live Weather & Satellite Intelligence Widget -->
+              <div class="weather-intel-card">
+                <div class="weather-intel-left">
+                  <span class="weather-location" id="widget-weather-city">London, UK</span>
+                  <span class="weather-condition" id="widget-weather-condition">Satellite uplink active</span>
+                </div>
+                <div class="weather-temp" id="widget-weather-temp">--°C</div>
+              </div>
+
+              <!-- Quick Tactical Protocols -->
+              <div class="quick-protocols-group">
+                <span class="section-label">RAPID DIRECTIVES</span>
+                <div class="quick-chips-grid">
+                  <button class="quick-chip-btn" id="chip-focus">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                    Focus Mode
+                  </button>
+                  <button class="quick-chip-btn" id="chip-dev">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    Dev Suite
+                  </button>
+                  <button class="quick-chip-btn" id="chip-screen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+                    Scan Screen
+                  </button>
+                  <button class="quick-chip-btn" id="chip-stats">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+                    Diagnostics
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Interactive Chat & Swarm Feedback -->
+            <div class="chat-column">
+              <!-- Live Sub-Agent Banner -->
+              <div id="agent-live-banner">
+                <div class="live-agent-badge">
+                  <div class="live-agent-dot"></div>
+                  <span id="agent-status-ticker">EXECUTIVE CORE // ONLINE &amp; LISTENING</span>
+                </div>
+                <span id="gemini-model-badge" style="color: var(--text-muted);">gemini-3.6-flash</span>
+              </div>
+
+              <!-- Chat Message Stream -->
+              <div id="chat-messages-container" class="custom-scroll">
+                <!-- Welcome Message from CY9 -->
+                <div class="chat-bubble-row">
+                  <div class="chat-avatar assistant-avatar">CY9</div>
+                  <div class="chat-bubble-content">
+                    <div class="bubble-meta">
+                      <span>CY9 CORE</span>
+                      <span>SYSTEM READY</span>
+                    </div>
+                    <div class="bubble-card assistant-card">
+                      <p>Good day, sir. All neural subsystems, telemetry arrays, and multi-agent protocols are fully initialized and operating at peak capacity.</p>
+                      <p>You may speak via the voice uplink (or type below) to launch applications, adjust audio volume, execute PowerShell automation, inspect your display with Gemini Vision, or query live intelligence.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Chat Input Bar -->
+              <div id="chat-input-container">
+                <!-- Real-Time Live Speech Transcription HUD Bar -->
+                <div id="live-voice-transcript-bar" class="live-voice-transcript-bar hidden">
+                  <div class="live-voice-header">
+                    <div class="live-voice-rec-badge">
+                      <span class="live-rec-dot"></span>
+                      <span class="live-rec-title">🎙️ LIVE SPEECH RECOGNITION // استماع صوتي مباشر</span>
+                    </div>
+                    <div class="live-voice-controls">
+                      <button id="btn-live-stop-send" class="live-action-btn send" type="button" title="إنهاء التسجيل وإرسال الأمر (Stop & Send)">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+                        <span>⏹️ إنهاء وإرسال (Send)</span>
+                      </button>
+                      <button id="btn-live-cancel" class="live-action-btn cancel" type="button" title="إلغاء التسجيل">
+                        <span>✕ إلغاء</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="live-voice-body">
+                    <div class="live-voice-dynamic-wave">
+                      <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <div id="live-voice-text" class="live-voice-text">تحدث الآن، سيظهر كلامك هنا لحظياً...</div>
+                  </div>
+                </div>
+
+                <div id="image-attachment-preview" class="input-preview-bar">
+                  <span id="attachment-preview-label">📎 Attached image for visual inspection</span>
+                  <button id="btn-remove-attachment" style="background:none;border:none;color:var(--hud-crimson);cursor:pointer;">✕</button>
+                </div>
+
+                <!-- File attachment preview (docs, PDFs, etc.) -->
+                <div id="file-attachment-preview" class="input-preview-bar" style="display:none;">
+                  <span id="file-preview-icon">📄</span>
+                  <span id="file-preview-name" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0 8px;">file.pdf</span>
+                  <span id="file-preview-size" style="color:var(--text-muted);font-size:11px;margin-right:8px;"></span>
+                  <button id="btn-remove-file" style="background:none;border:none;color:var(--hud-crimson);cursor:pointer;">✕</button>
+                </div>
+
+                <!-- Hidden file input -->
+                <input type="file" id="file-input-hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.json,.md" style="display:none;" multiple>
+
+                <div class="input-box-wrapper">
+                  <input type="text" id="chat-input" placeholder="Give CY9 a directive or ask a question... (e.g. 'Open VS Code', 'Set volume to 40%')" autocomplete="off">
+                  
+                  <button id="btn-attach-file" class="input-action-btn" title="Attach File, Image, or Document (PDF, Word, Excel, PowerPoint)">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                    </svg>
+                  </button>
+
+                  <button id="btn-attach-screen" class="input-action-btn" title="Capture Desktop Screen for Vision Analysis">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </button>
+
+                  <button id="btn-mic" class="input-action-btn" title="Voice Input (Speech-to-Text)">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                      <line x1="12" y1="19" x2="12" y2="23"/>
+                      <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                  </button>
+
+                  <button id="btn-send" class="input-action-btn send-btn" title="Execute Directive">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="22" y1="2" x2="11" y2="13"/>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 2: AGENT SWARM ==================== -->
+        <section id="tab-agents" class="tab-pane">
+          <div class="agents-view-container custom-scroll">
+            <div class="section-label">MULTI-AGENT AUTONOMOUS SWARM // ACTIVE PROCESSES</div>
+            <div class="agents-grid" id="agents-grid-container">
+              <!-- Dynamically populated by app.js -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 3: SYSTEM TELEMETRY ==================== -->
+        <section id="tab-telemetry" class="tab-pane">
+          <div class="telemetry-view-container custom-scroll">
+            <div class="section-label">WORKSTATION HARDWARE TELEMETRY &amp; DIAGNOSTICS</div>
+            
+            <div class="telemetry-metrics-grid">
+              <div class="metric-card">
+                <div class="metric-title">
+                  <span>CPU COMPUTE LOAD</span>
+                  <span id="metric-cpu-cores">-- Cores</span>
+                </div>
+                <div class="metric-value-huge" id="metric-cpu-load">0%</div>
+                <div class="metric-subtext" id="metric-cpu-model">Scanning processor...</div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-title">
+                  <span>MEMORY UTILIZATION</span>
+                  <span id="metric-ram-percent">0%</span>
+                </div>
+                <div class="metric-value-huge" id="metric-ram-used">0.0 GB</div>
+                <div class="metric-subtext" id="metric-ram-total">Total: 0.0 GB</div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-title">
+                  <span>BATTERY / POWER</span>
+                  <span id="metric-battery-status">AC Power</span>
+                </div>
+                <div class="metric-value-huge" id="metric-battery-percent">100%</div>
+                <div class="metric-subtext" id="metric-battery-charging">Power grid connected</div>
+              </div>
+
+              <div class="metric-card">
+                <div class="metric-title">
+                  <span>SYSTEM UPTIME</span>
+                  <span>ONLINE</span>
+                </div>
+                <div class="metric-value-huge" id="metric-uptime">0h 0m</div>
+                <div class="metric-subtext" id="metric-hostname">Workstation</div>
+              </div>
+            </div>
+
+            <!-- Active Processes Table -->
+            <div class="telemetry-table-card">
+              <div class="section-label">TOP ACTIVE PROCESSES</div>
+              <table class="proc-table">
+                <thead>
+                  <tr>
+                    <th>PID</th>
+                    <th>PROCESS NAME</th>
+                    <th>CPU %</th>
+                    <th>MEMORY %</th>
+                  </tr>
+                </thead>
+                <tbody id="proc-table-body">
+                  <tr><td colspan="4">Polling process table...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 4: PROTOCOLS & TOOLS ==================== -->
+        <section id="tab-protocols" class="tab-pane">
+          <div class="protocols-view-container custom-scroll">
+            <div class="section-label">IRON MAN AUTOMATION PROTOCOLS</div>
+            <div class="protocols-grid" id="protocols-grid-container">
+              <!-- Dynamically populated from memoryService -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 5: SCI-FI TERMINAL ==================== -->
+        <section id="tab-terminal" class="tab-pane">
+          <div class="terminal-view-container">
+            <div class="terminal-header">
+              <div class="section-label">POWERSHELL MATRIX CONSOLE // DIRECT OS SUBPROCESS</div>
+              <button id="btn-clear-terminal" class="quick-chip-btn">Clear Log</button>
+            </div>
+            
+            <div class="terminal-screen custom-scroll" id="terminal-output">
+              <div class="terminal-line">// CY9 Subprocess Terminal Initialized.</div>
+              <div class="terminal-line">// Ready to accept native PowerShell commands, scripts, and queries.</div>
+            </div>
+
+            <div class="terminal-input-bar">
+              <span class="terminal-prompt-prefix">PS CY9&gt;</span>
+              <input type="text" id="terminal-cmd-input" placeholder="Type PowerShell command (e.g. Get-Process, ipconfig, dir)..." autocomplete="off">
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 6: MEMORY & AGENDA ==================== -->
+        <section id="tab-memory" class="tab-pane">
+          <div class="memory-view-container custom-scroll">
+            <!-- Left: Long-Term Memory Banks -->
+            <div class="memory-column-card">
+              <div class="section-label">LONG-TERM MEMORY BANKS</div>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="input-new-memory" class="hud-input" style="flex:1;" placeholder="Store fact in CY9 memory...">
+                <button id="btn-add-memory" class="quick-chip-btn">Save Fact</button>
+              </div>
+              <div class="memory-list custom-scroll" id="memory-items-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Right: Task & Agenda Roster -->
+            <div class="memory-column-card">
+              <div class="section-label">TACTICAL AGENDA &amp; TASKS</div>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="input-new-task" class="hud-input" style="flex:1;" placeholder="Add mission task...">
+                <button id="btn-add-task" class="quick-chip-btn">Add Task</button>
+              </div>
+              <div class="memory-list custom-scroll" id="task-items-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 8: 15 ULTIMATE SUPERPOWERS ==================== -->
+        <section id="tab-superpowers" class="tab-pane">
+          <div class="superpowers-container custom-scroll">
+            <div class="section-label">CY9 15 ULTIMATE TACTICAL SUPERPOWERS</div>
+            
+            <div class="superpower-grid">
+              <!-- 1. Zero-Clutter File Organizer -->
+              <div class="superpower-card">
+                <div class="sp-icon">📂</div>
+                <div class="sp-info">
+                  <h4>Zero-Clutter File Organizer</h4>
+                  <p>Auto-categorize loose files on Desktop/Downloads into Documents, Images, Code & Invoices.</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn" id="btn-sp-organize-desktop">Clean Desktop</button>
+                  <button class="sp-action-btn" id="btn-sp-organize-downloads">Clean Downloads</button>
+                </div>
+              </div>
+
+              <!-- 2. PC Mechanic & System Doctor -->
+              <div class="superpower-card">
+                <div class="sp-icon">🛠️</div>
+                <div class="sp-info">
+                  <h4>PC Mechanic & Health Doctor</h4>
+                  <p>Diagnose hardware health score, purge Windows temp caches, and optimize system speed.</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn highlight" id="btn-sp-pc-health">Run Diagnostic & Clean</button>
+                </div>
+              </div>
+
+              <!-- 3. Deep Research Intel Dossier -->
+              <div class="superpower-card">
+                <div class="sp-icon">🕵️</div>
+                <div class="sp-info">
+                  <h4>Deep Research & Intel Agent</h4>
+                  <p>Conduct autonomous multi-source intelligence study and generate Markdown/PDF dossier.</p>
+                </div>
+                <div class="sp-actions">
+                  <input type="text" id="sp-research-input" class="hud-input" placeholder="Topic: e.g. Saudi AI Market 2026" style="margin-bottom:6px;width:100%;">
+                  <button class="sp-action-btn" id="btn-sp-deep-research">Compile Dossier</button>
+                </div>
+              </div>
+
+              <!-- 4. Touchless Air Gestures -->
+              <div class="superpower-card">
+                <div class="sp-icon">🖐️</div>
+                <div class="sp-info">
+                  <h4>Touchless Air Gesture Vision</h4>
+                  <p>Control windows, swipes, and mutes in the air using webcam optical motion tracking.</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn" id="btn-sp-toggle-gestures">Engage Air Vision</button>
+                  <video id="gesture-video" style="display:none;" width="160" height="120" autoplay muted></video>
+                  <canvas id="gesture-canvas" style="display:none;" width="160" height="120"></canvas>
+                </div>
+              </div>
+
+              <!-- 5. Meeting Intelligence & Minutes -->
+              <div class="superpower-card">
+                <div class="sp-icon">📋</div>
+                <div class="sp-info">
+                  <h4>Meeting Intelligence & Minutes</h4>
+                  <p>Record discussions, track agenda items, and generate official Meeting Minutes markdown.</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn" id="btn-sp-start-meeting">Start Recording</button>
+                  <button class="sp-action-btn" id="btn-sp-gen-minutes">Generate Minutes</button>
+                </div>
+              </div>
+
+              <!-- 6. Morning Briefing & Night Sentry -->
+              <div class="superpower-card">
+                <div class="sp-icon">🌅</div>
+                <div class="sp-info">
+                  <h4>Daily Executive Briefings</h4>
+                  <p>Trigger AI voice morning briefing (weather, hardware telemetry, calendar, and news).</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn" id="btn-sp-morning-briefing">Morning Briefing</button>
+                </div>
+              </div>
+
+              <!-- 7. Emergency Red Alert Lockdown -->
+              <div class="superpower-card">
+                <div class="sp-icon">🚨</div>
+                <div class="sp-info">
+                  <h4>Protocol Red Alert</h4>
+                  <p>Instant privacy lockdown: mute audio, minimize all windows, clear clipboard, and lock PC.</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn danger" id="btn-sp-red-alert">ENGAGE RED ALERT</button>
+                </div>
+              </div>
+
+              <!-- 8. Health, Posture & Hydration -->
+              <div class="superpower-card">
+                <div class="sp-icon">🧘</div>
+                <div class="sp-info">
+                  <h4>Health & Ergonomics Guardian</h4>
+                  <p>Workstation posture check, 20-20-20 eye strain relief, and hydration reminders.</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn" id="btn-sp-posture">Check Posture</button>
+                  <button class="sp-action-btn" id="btn-sp-hydration">Hydration Alert</button>
+                </div>
+              </div>
+
+              <!-- 9. Total Recall Screen Memory -->
+              <div class="superpower-card">
+                <div class="sp-icon">🧠</div>
+                <div class="sp-info">
+                  <h4>Total Recall Screen Memory</h4>
+                  <p>Search local visual screen history to find past articles, websites, codes, or invoices.</p>
+                </div>
+                <div class="sp-actions">
+                  <input type="text" id="sp-recall-input" class="hud-input" placeholder="Query: e.g. Aqar villas, AI news" style="margin-bottom:6px;width:100%;">
+                  <button class="sp-action-btn" id="btn-sp-search-recall">Recall History</button>
+                </div>
+              </div>
+
+              <!-- 10. Native Windows Mouse & Keyboard RPA -->
+              <div class="superpower-card">
+                <div class="sp-icon">🖱️</div>
+                <div class="sp-info">
+                  <h4>Windows Mouse & Keyboard RPA</h4>
+                  <p>Full autonomous cursor movement, left/right clicks, double-clicks, dragging, and typing.</p>
+                </div>
+                <div class="sp-actions">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%;">
+                    <button class="sp-action-btn" id="btn-sp-mouse-left">🖱️ Left Click</button>
+                    <button class="sp-action-btn" id="btn-sp-mouse-right">🖱️ Right Click</button>
+                    <button class="sp-action-btn" id="btn-sp-mouse-double">⚡ Double Click</button>
+                    <button class="sp-action-btn" id="btn-sp-mouse-scroll">📜 Scroll Down</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 11. Live Screen Vision & Inspection -->
+              <div class="superpower-card">
+                <div class="sp-icon">👁️</div>
+                <div class="sp-info">
+                  <h4>Live Screen Vision & Inspection</h4>
+                  <p>Real-time visual comprehension of open windows, codes, charts, and buttons on screen.</p>
+                </div>
+                <div class="sp-actions">
+                  <button class="sp-action-btn highlight" id="btn-sp-inspect-screen">🔍 فحص الشاشة الآن (Inspect)</button>
+                </div>
+              </div>
+
+              <!-- 12. AI Master Prompt Architect for Coding Projects -->
+              <div class="superpower-card">
+                <div class="sp-icon">💻</div>
+                <div class="sp-info">
+                  <h4>AI Master Prompt & Architecture Studio</h4>
+                  <p>Transform project ideas into production-grade prompts for Cursor, Windsurf, Claude & Antigravity.</p>
+                </div>
+                <div class="sp-actions">
+                  <input type="text" id="sp-prompt-desc-input" class="hud-input" placeholder="وصف فكرة المشروع: e.g. متجر الكتروني متكامل مع بوابات دفع وداشبورد" style="margin-bottom:6px;width:100%;">
+                  <button class="sp-action-btn highlight" id="btn-sp-generate-prompt">🚀 صمم برومبت برمجي جبار</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 7: SETTINGS & CONFIG ==================== -->
+        <section id="tab-settings" class="tab-pane">
+          <div class="settings-view-container custom-scroll">
+            <div class="section-label">SYSTEM CONFIGURATION &amp; GEMINI NEURAL LINK</div>
+
+            <!-- API Key & Model Configuration -->
+            <div class="settings-card">
+              <div class="setting-row">
+                <label class="setting-label">GOOGLE GEMINI API KEY (مفتاح الذكاء الاصطناعي)</label>
+                <p class="setting-desc">أدخل مفتاح Google Gemini الخاص بك لتفعيل التفكير التوليدي المتعدد، الرؤية البصرية، وشبكة الوكلاء (يتم حفظه تلقائياً).</p>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="password" id="cfg-api-key" class="hud-input" style="flex: 1;" placeholder="AIzaSy..." autocomplete="off">
+                  <button id="btn-toggle-key-visibility" class="quick-chip-btn" title="Show / Hide API Key" style="padding: 8px 12px;">👁️</button>
+                  <button id="btn-test-key" class="quick-chip-btn">Test Key</button>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <label class="setting-label">AI MODEL ARCHITECTURE (نموذج الذكاء الاصطناعي)</label>
+                <select id="cfg-model" class="hud-select">
+                  <option value="gemini-2.5-flash">gemini-2.5-flash (أفضل سرعة وذكاء واستقرار للحصص المجانية)</option>
+                  <option value="gemini-2.0-flash">gemini-2.0-flash (سريع جداً وخفيف ومرن)</option>
+                  <option value="gemini-1.5-flash">gemini-1.5-flash (عالي الاستقرار وأعلى سقف للطلبات المجانية)</option>
+                  <option value="gemini-3.6-flash" selected>gemini-3.6-flash (فائق الذكاء والتنفيذ الذاتي)</option>
+                  <option value="gemini-1.5-pro">gemini-1.5-pro (تفكير عميق وبرمجة متقدمة)</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <label class="setting-label">TELEGRAM SMARTPHONE UPLINK (OPTIONAL)</label>
+                <p class="setting-desc">Connect a free Telegram Bot to send screenshots, alerts, and receive remote directives from your phone while away.</p>
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                  <input type="text" id="cfg-telegram-token" class="hud-input" style="flex: 1;" placeholder="Telegram Bot Token (from @BotFather)...">
+                  <input type="text" id="cfg-telegram-chat" class="hud-input" style="width: 140px;" placeholder="Your Chat ID...">
+                </div>
+              </div>
+            </div>
+
+            <!-- Persona & Voice Configuration -->
+            <div class="settings-card">
+              <div class="setting-row">
+                <label class="setting-label">USER ADDRESS TITLE (اللقب والاسم)</label>
+                <input type="text" id="cfg-user-name" class="hud-input" placeholder="سيدي, Sir, Tony, Doctor...">
+              </div>
+
+              <!-- AI Language Selection -->
+              <div class="setting-row">
+                <label class="setting-label">AI LANGUAGE &amp; RECOGNITION (لغة المساعد الصوتي والتعرف)</label>
+                <p class="setting-desc">حدد لغة الاستماع والتحدث الأساسية لنظام CY9.</p>
+                <select id="cfg-language" class="hud-select">
+                  <option value="ar" selected>🇸🇦 العربية (Arabic - كامل الدعم للهجات والمحادثة)</option>
+                  <option value="en">🇬🇧 English (British CY9 Intelligence)</option>
+                  <option value="auto">🌐 تلقائي ذكي (Auto-Detect Language)</option>
+                </select>
+              </div>
+
+              <!-- Speech Voice Selection -->
+              <div class="setting-row">
+                <label class="setting-label">VOICE SYNTHESIS &amp; SELECTION (اختيار نبرة الصوت)</label>
+                <select id="cfg-speech-voice" class="hud-select" style="margin-bottom: 8px;">
+                  <option value="default">Default System Voice (تلقائي)</option>
+                </select>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                  <label class="hud-checkbox-label">
+                    <input type="checkbox" id="cfg-enable-tts" checked>
+                    <span>تفعيل نطق الردود صوتياً (Enable Speech)</span>
+                  </label>
+                  <label class="hud-checkbox-label">
+                    <input type="checkbox" id="cfg-wake-word" checked>
+                    <span>Continuous "Hey CY9" Wake Detection</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Startup Voice Welcome -->
+              <div class="setting-row">
+                <label class="setting-label">STARTUP VOICE GREETING (الترحيب الصوتي عند فتح CY9)</label>
+                <p class="setting-desc">ينطق CY9 هذه الرسالة بصوت واضح أول ما يفتح التطبيق أو يقلع الجهاز.</p>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <label class="hud-checkbox-label">
+                    <input type="checkbox" id="cfg-welcome-voice" checked>
+                    <span>🔊 تفعيل الترحيب الصوتي عند فتح البرنامج (Voice Welcome on Launch)</span>
+                  </label>
+                  <div style="display: flex; gap: 10px;">
+                    <input type="text" id="cfg-welcome-text" class="hud-input" style="flex: 1;" placeholder="هلا ومرحبا يا CY9" value="هلا ومرحبا يا CY9">
+                    <button id="btn-test-greeting" class="quick-chip-btn" type="button">🔊 تجربة النطق</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <label class="setting-label">HUD HOLOGRAPHIC THEME</label>
+                <div class="theme-options-grid">
+                  <button class="theme-btn active" data-theme="theme-cy9">
+                    <span class="theme-dot" style="background:#ffffff;box-shadow:0 0 8px #ffffff;"></span> CY9 Obsidian Noir
+                  </button>
+                  <button class="theme-btn" data-theme="theme-gold">
+                    <span class="theme-dot" style="background:#f59e0b;"></span> Mark VII Gold
+                  </button>
+                  <button class="theme-btn" data-theme="theme-purple">
+                    <span class="theme-dot" style="background:#c084fc;"></span> Stealth Violet
+                  </button>
+                  <button class="theme-btn" data-theme="theme-emerald">
+                    <span class="theme-dot" style="background:#10b981;"></span> Quantum Green
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Desktop App & Windows Integration Settings -->
+            <div class="settings-card">
+              <div class="setting-row">
+                <label class="setting-label">WINDOWS DESKTOP &amp; OVERLAY INTEGRATION</label>
+                <p class="setting-desc">إعدادات تشغيل CY9 مع إقلاع الجهاز والدائرة العائمة على سطح المكتب.</p>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                  <label class="hud-checkbox-label">
+                    <input type="checkbox" id="cfg-autostart" checked>
+                    <span>🚀 التشغيل التلقائي مع فتح الويندوز (Start Automatically on PC Boot)</span>
+                  </label>
+                  <label class="hud-checkbox-label">
+                    <input type="checkbox" id="cfg-floating-orb" checked>
+                    <span>🌀 التحول إلى الدائرة العائمة أسفل الشاشة عند التصغير أو الإغلاق (Minimize to Floating Orb)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="setting-row" style="margin-top: 14px;">
+                <label class="setting-label">اختصارات سطح المكتب (DESKTOP SHORTCUT)</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <button id="btn-create-desktop-shortcut" class="quick-chip-btn" style="padding: 8px 14px; background: rgba(0, 240, 255, 0.15); border-color: var(--hud-cyan); color: #fff;">
+                    ⚡ إنشاء اختصار سطح المكتب (Create Desktop Shortcut)
+                  </button>
+                  <span style="font-size: 11px; color: #8ab4f8;">الاختصار السريع: Ctrl + Shift + J للفتح والإخفاء الفوري</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Save Button -->
+            <button id="btn-save-settings" class="engage-btn" style="width: 100%;">SAVE ALL CONFIGURATION</button>
+
+            <!-- Complete Shutdown Button -->
+            <div style="margin-top: 15px;">
+              <button id="btn-shutdown-cy9" class="hud-action-btn danger-btn" style="width: 100%; justify-content: center; padding: 12px; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--hud-crimson); color: var(--hud-crimson); font-weight: 700; border-radius: var(--radius-md); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                  <line x1="12" y1="2" x2="12" y2="12"></line>
+                </svg>
+                <span>🛑 إيقاف وتشغيل خروج كامل من CY9 (Shutdown CY9 Completely)</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB: VISION & FACE ID ==================== -->
+        <section id="tab-vision" class="tab-pane">
+          <div class="settings-layout custom-scroll">
+            <div class="settings-header">
+              <h2 class="tab-title">CY9 // BIOMETRIC VISION &amp; FACE PRESENCE</h2>
+              <p class="tab-subtitle">مراقبة الجلسة، الحضور التلقائي عبر الكاميرا، وتنبيهات الاستقامة وقاعدة 20-20-20.</p>
+            </div>
+
+            <div class="settings-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <label class="setting-label" style="margin:0;">LIVE CAMERA BIO-FEED</label>
+                <div style="display: flex; gap: 10px;">
+                  <button id="btn-start-camera" class="quick-chip-btn">📹 تشغيل الكاميرا</button>
+                  <button id="btn-stop-camera" class="quick-chip-btn">⏹️ إيقاف</button>
+                </div>
+              </div>
+
+              <div style="position: relative; width: 100%; max-width: 480px; margin: 0 auto; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--accent-dim); background: #000;">
+                <video id="webcam-video" autoplay playsinline muted style="display: none;"></video>
+                <canvas id="webcam-canvas" style="width: 100%; height: auto; display: block;"></canvas>
+                <div id="camera-status-overlay" style="position: absolute; bottom: 10px; left: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--accent-color); background: rgba(0,0,0,0.7); padding: 4px 8px; border-radius: 4px;">Camera Standby</div>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="btn-check-posture" class="engage-btn" style="flex: 1;">🧍 فحص وضعية الجلوس الآن</button>
+                <button id="btn-eye-rest" class="quick-chip-btn" style="flex: 1;">👁️ تفعيل استراحة العينين</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB: ECOSYSTEM & MEDIA ==================== -->
+        <section id="tab-ecosystem" class="tab-pane">
+          <div class="settings-layout custom-scroll">
+            <div class="settings-header">
+              <h2 class="tab-title">CY9 // CONNECTED ECOSYSTEM &amp; MEDIA</h2>
+              <p class="tab-subtitle">التحكم بالموسيقى (Spotify)، وتكامل واتساب وتيليجرام وجدول المواعيد.</p>
+            </div>
+
+            <!-- Bluetooth & Audio Headset Deck (Huawei FreeBuds / Wireless Audio) -->
+            <div class="settings-card">
+              <label class="setting-label">🎧 BLUETOOTH &amp; AUDIO HEADSET UPLINK (سماعات البلوتوث)</label>
+              <p class="setting-desc">اكتشاف وربط سماعات البلوتوث (HUAWEI FreeBuds / Wireless Headsets) وتوجيه الصوت والميكروفون إليها تلقائياً.</p>
+              <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <button id="btn-bt-connect-huawei" class="engage-btn" style="flex: 1; padding: 10px 14px; background: rgba(0, 240, 255, 0.2); border-color: var(--hud-cyan); color: #fff;">
+                  🎧 ربط سماعة هواوي (Connect HUAWEI FreeBuds)
+                </button>
+                <button id="btn-bt-scan" class="quick-chip-btn" style="padding: 10px 14px;">
+                  🔄 فحص أجهزة البلوتوث
+                </button>
+                <button id="btn-bt-settings" class="quick-chip-btn" style="padding: 10px 14px;">
+                  ⚙️ إعدادات Windows Bluetooth
+                </button>
+              </div>
+              <div id="bt-devices-list" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                <!-- Populated dynamically with paired & connected Bluetooth devices -->
+              </div>
+            </div>
+
+            <!-- Spotify / Media Player Card -->
+            <div class="settings-card">
+              <label class="setting-label">SPOTIFY &amp; FOCUS AUDIO DECK</label>
+              <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--accent-dim); margin-top: 8px;">
+                <div>
+                  <div id="media-track-name" style="font-size: 13px; font-weight: 700; color: var(--text-primary);">Ambient Synthwave CY9 // Focus Stream</div>
+                  <div style="font-size: 11px; color: var(--accent-color);">CY9 High-Fidelity Audio Uplink</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button id="btn-media-prev" class="quick-chip-btn">⏮️</button>
+                  <button id="btn-media-play" class="quick-chip-btn" style="background: var(--accent-dim); border-color: var(--accent-color);">▶️ تشغيل</button>
+                  <button id="btn-media-next" class="quick-chip-btn">⏭️</button>
+                </div>
+              </div>
+              <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="text" id="media-search-input" class="hud-input" style="flex: 1;" placeholder="ابحث عن أغنية أو قائمة تركيز...">
+                <button id="btn-media-search" class="quick-chip-btn">🎵 بحث وتشغيل</button>
+              </div>
+            </div>
+
+            <!-- Gmail & Email Card -->
+            <div class="settings-card" style="border-left: 3px solid #ea4335;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label class="setting-label" style="margin-bottom: 0;">📧 GMAIL &amp; EMAIL UPLINK (بريد جيميل)</label>
+                <span class="status-indicator online" style="background: #ea4335; box-shadow: 0 0 8px #ea4335;"></span>
+              </div>
+              <p class="setting-desc">فحص الرسائل غير المقروءة، قراءة وتلخيص الإيميلات، وإرسال الرسائل عبر جيميل فوراً.</p>
+              <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <button id="btn-gmail-inbox" class="quick-chip-btn highlight" style="flex: 1; padding: 10px; border-color: #ea4335; color: #fff;">
+                  📥 فحص صندوق الوارد (Check Inbox)
+                </button>
+                <button id="btn-gmail-compose" class="quick-chip-btn" style="flex: 1; padding: 10px;">
+                  ✏️ إنشاء رسالة جديدة (Compose)
+                </button>
+              </div>
+            </div>
+
+            <!-- Google Calendar & Meetings Card -->
+            <div class="settings-card" style="border-left: 3px solid #4285f4;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label class="setting-label" style="margin-bottom: 0;">📅 GOOGLE CALENDAR &amp; MEETINGS (المواعيد والتقويم)</label>
+                <span class="status-indicator online" style="background: #4285f4; box-shadow: 0 0 8px #4285f4;"></span>
+              </div>
+              <p class="setting-desc">مزامنة جدول المواعيد اليومي وجلسات العمل، وإنشاء روابط Google Meet فورية.</p>
+              <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <button id="btn-cal-agenda" class="quick-chip-btn highlight" style="flex: 1; padding: 10px; border-color: #4285f4; color: #fff;">
+                  📅 استعراض جدول اليوم (Today's Agenda)
+                </button>
+                <button id="btn-cal-meet" class="quick-chip-btn" style="flex: 1; padding: 10px; color: #34a853; border-color: #34a853;">
+                  🎥 اجتماع سريع (Instant Google Meet)
+                </button>
+              </div>
+            </div>
+
+            <!-- WhatsApp & Direct Uplink -->
+            <div class="settings-card">
+              <label class="setting-label">WHATSAPP WEB &amp; TELEGRAM UPLINK</label>
+              <div style="display: flex; gap: 10px; margin-top: 8px;">
+                <button id="btn-open-whatsapp" class="engage-btn" style="flex: 1;">📱 فتح WhatsApp Web</button>
+                <button id="btn-send-telegram-memo" class="quick-chip-btn" style="flex: 1;">✈️ إرسال مذكرة لتيليجرام</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TAB: UNIVERSAL IR REMOTE & SMART HOME ==================== -->
+        <section id="tab-smarthome" class="tab-pane">
+          <div class="settings-layout custom-scroll">
+            <div class="settings-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h2 class="tab-title">📡 CY9 // UNIVERSAL IR REMOTE &amp; SMART HOME HUB</h2>
+                <p class="tab-subtitle">التحكم بالأجهزة الإلكترونية عبر ريموت الأشعة تحت الحمراء (IR Remote Blaster: مكيفات، شاشات، إضاءات، ساوند بار).</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 8px; padding: 6px 12px;">
+                <span class="status-indicator online" style="background: #00f0ff; box-shadow: 0 0 10px #00f0ff;"></span>
+                <span style="font-size: 11px; font-family: 'Share Tech Mono', monospace; color: #00f0ff;">IR EMITTER: 38kHz READY</span>
+              </div>
+            </div>
+
+            <!-- IR Hub Gateway & Device Management Action Bar -->
+            <div class="settings-card" style="padding: 14px 18px; border-left: 3px solid #00f0ff;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                  <label class="setting-label" style="margin-bottom: 2px;">HARDWARE IR BLASTER &amp; DEVICE MANAGER</label>
+                  <div style="font-size: 11px; color: #94a3b8;">إدارة وإضافة الأجهزة الإلكترونية والتحكم بإشارات الأشعة تحت الحمراء:</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button id="btn-toggle-add-ir-device" class="engage-btn" style="padding: 8px 14px; font-size: 11px;">
+                    ➕ إضافة جهاز ريموت جديد (Add Device)
+                  </button>
+                  <button id="btn-toggle-ir-gateway" class="quick-chip-btn" style="padding: 8px 14px; font-size: 11px;">
+                    ⚙️ إعدادات جهاز الإرسال (Hardware Gateway)
+                  </button>
+                </div>
+              </div>
+
+              <!-- Add New Remote Device Form (Collapsible) -->
+              <div id="ir-add-device-form" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 240, 255, 0.2);">
+                <div style="font-size: 12px; font-weight: bold; color: #00f0ff; margin-bottom: 10px;">➕ إضافة جهاز ريموت جديد إلى المنظومة:</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px;">
+                  <div>
+                    <label style="font-size: 10px; color: #94a3b8;">اسم الجهاز (Device Name):</label>
+                    <input type="text" id="input-ir-dev-name" class="hud-input" style="width: 100%;" placeholder="مثال: مكيف الصالة، شاشة المجلس...">
+                  </div>
+                  <div>
+                    <label style="font-size: 10px; color: #94a3b8;">نوع الجهاز (Device Type):</label>
+                    <select id="select-ir-dev-type" class="hud-select" style="width: 100%;">
+                      <option value="ac">❄️ مكيف سبليت (Air Conditioner)</option>
+                      <option value="tv">📺 شاشة تلفزيون (Smart TV)</option>
+                      <option value="light">💡 إضاءة ليد (RGB Light Strip)</option>
+                      <option value="audio">🔊 ساوند بار صوتي (Soundbar)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size: 10px; color: #94a3b8;">الماركة / البروتوكول (Brand):</label>
+                    <select id="select-ir-dev-brand" class="hud-select" style="width: 100%;">
+                      <option value="Gree">Gree / كاريير / ميديا / جنرال (AC)</option>
+                      <option value="Samsung">Samsung (TV / AC)</option>
+                      <option value="LG">LG (TV / AC)</option>
+                      <option value="Sony">Sony / TCL (TV / Audio)</option>
+                      <option value="Tuya">Tuya / Smart Life (Universal)</option>
+                      <option value="Universal">Universal 24-Key NEC</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                  <button id="btn-ir-save-new-device" class="engage-btn" style="padding: 8px 16px; font-size: 11px;">💾 حفظ وإضافة الجهاز</button>
+                  <button id="btn-ir-cancel-add-device" class="quick-chip-btn" style="padding: 8px 14px; font-size: 11px;">إلغاء</button>
+                </div>
+              </div>
+
+              <!-- Hardware Blaster Gateway Settings (Collapsible) -->
+              <div id="ir-gateway-settings-form" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 240, 255, 0.2);">
+                <div style="font-size: 12px; font-weight: bold; color: #00f0ff; margin-bottom: 10px;">⚙️ إعدادات جهاز الإرسال الفعلي (Physical IR Blaster Gateway):</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px;">
+                  <div>
+                    <label style="font-size: 10px; color: #94a3b8;">نوع بروتوكول جهاز الإرسال:</label>
+                    <select id="select-ir-hub-type" class="hud-select" style="width: 100%;">
+                      <option value="tuya_broadlink_virtual">📡 Universal IR Blaster (Tuya / Broadlink / Virtual)</option>
+                      <option value="broadlink">📡 BroadLink RM4 Mini / Pro (UDP Local)</option>
+                      <option value="tuya">☁️ Tuya / Smart Life WiFi IR Blaster</option>
+                      <option value="serial_com">🔌 USB Serial IR Transceiver (COM Port)</option>
+                      <option value="mqtt">🌐 MQTT Tasmota IR Gateway</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size: 10px; color: #94a3b8;">عنوان IP لجهاز الإرسال (Hub IP):</label>
+                    <input type="text" id="input-ir-hub-ip" class="hud-input" style="width: 100%;" value="192.168.1.100" placeholder="192.168.1.xxx">
+                  </div>
+                  <div>
+                    <label style="font-size: 10px; color: #94a3b8;">منفذ USB السريالي (COM Port):</label>
+                    <input type="text" id="input-ir-hub-com" class="hud-input" style="width: 100%;" value="COM3" placeholder="COM3">
+                  </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                  <button id="btn-ir-test-pulse" class="quick-chip-btn highlight" style="padding: 8px 14px; font-size: 11px;">🧪 إرسال نبضة اختبار (Test 38kHz IR Pulse)</button>
+                  <button id="btn-ir-save-gateway" class="engage-btn" style="padding: 8px 16px; font-size: 11px;">💾 حفظ إعدادات الهب</button>
+                </div>
+              </div>
+
+              <!-- Paired Devices Badge Bar -->
+              <div style="margin-top: 14px;">
+                <label style="font-size: 10px; color: #94a3b8; display: block; margin-bottom: 6px;">الأجهزة المربوطة حالياً (Paired IR Devices):</label>
+                <div id="ir-paired-chips-container" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <!-- Dynamically rendered paired device chips with Unpair button -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Remotes Container (Rendered purely from user added devices) -->
+            <div id="dynamic-remotes-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+              <!-- Populated dynamically via app.js -->
+            </div>
+
+            <!-- Connected Appliances & Custom Learned Remotes -->
+            <div class="settings-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="setting-label" style="margin-bottom: 0;">REGISTERED IR APPLIANCES &amp; LEARNED DEVICES</label>
+                <button id="btn-ir-learn-signal" class="quick-chip-btn highlight" style="font-size: 11px; padding: 4px 12px;">📡 Learn New IR Button (تعلم إشارة)</button>
+              </div>
+              <div id="iot-devices-list" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast-container"></div>
+  </div>
+
+  <!-- Renderer Scripts -->
+  <script src="services/neuralVoiceService.js"></script>
+  <script src="services/faceVisionService.js"></script>
+  <script src="services/visionAgentService.js"></script>
+  <script src="services/integrationsService.js"></script>
+  <script src="services/irRemoteService.js"></script>
+  <script src="services/smartHomeService.js"></script>
+  <script src="renderer/audioFX.js"></script>
+  <script src="renderer/voiceEngine.js"></script>
+  <script src="renderer/arcReactor.js"></script>
+  <script src="renderer/gestureEngine.js"></script>
+  <script src="renderer/meetingEngine.js"></script>
+  <script src="renderer/app.js"></script>
+</body>
+</html>

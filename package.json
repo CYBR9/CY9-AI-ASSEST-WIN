@@ -1,0 +1,31 @@
+{
+  "name": "cy9-ai-assistant",
+  "version": "1.0.0",
+  "description": "CY9 Autonomous AI Assistant for Windows powered by Gemini AI and Multi-Agent Swarm",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build:exe": "electron-packager . CY9 --platform=win32 --arch=x64 --out=dist --overwrite --prune=true --icon=src/assets/icon.png"
+  },
+  "keywords": [
+    "cy9",
+    "gemini",
+    "ai-assistant",
+    "windows",
+    "electron",
+    "agentic-ai",
+    "hud"
+  ],
+  "author": "CY9 Team",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^2.3.0",
+    "dotenv": "^16.4.7",
+    "systeminformation": "^5.25.11"
+  },
+  "devDependencies": {
+    "electron": "^34.2.0",
+    "electron-packager": "^17.1.2"
+  }
+}
